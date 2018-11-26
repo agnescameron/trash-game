@@ -1,0 +1,13 @@
+{
+  "name": "trashGame",
+  "version": "1.0.0",
+  "description": "A game about trash",
+  "main": "index.js",
+  "author": "Agnes Cameron",
+  "license": "MIT",
+  "dependencies": {
+    "clui": "^0.3.6",
+    "commander": "^2.19.0",
+    "inquirer": "^6.2.0"
+  }
+}
