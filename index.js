@@ -2,8 +2,36 @@ const assert = require('assert'); // N.B: Assert module comes bundled with Node.
 const CLI         = require('clui');
 const Spinner     = CLI.Spinner;
 const inquirer  = require('./lib/inquirer');
-const graphics = require('./lib/graphics')
+const graphics = require('./lib/graphics');
+const information = require('./lib/information');
 const status = new Spinner('running day...');
+
+
+
+// game state, updated for stats
+const STATE = {
+  buildings: {
+    ML: true,
+    arch: false,
+    sloan: false
+  },
+  money: 10000,
+  staff: {
+  	cleaners: 1,
+  	recycling: 0,
+  	supervisors: 0,
+  },
+  waste: {
+  	recycling: 0,
+  	compost: 0,
+  	landfill: 100
+  },
+  population: {
+  	students: 3,
+  	faculty: 1,
+  },
+  day: 0
+}
 
 var Building = {
 	rooms: ''
@@ -17,7 +45,7 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-const runDay = async (day) => {
+const runDay = async () => {
 	status.start();
 	graphics.drawRoom();
 	await sleep(2000);
@@ -25,7 +53,7 @@ const runDay = async (day) => {
 }
 
 function getStats(){
-	console.log('score is 0');
+	console.log('game state is', STATE);
 }
 
 function printMessages(){
@@ -39,18 +67,15 @@ const getName = async () => {
 
 
 const main = async () => {
-	var day = 0;
+	await information.onboard();
 	var playing = true;
 	await getName();
 	while (playing) {
-		await runDay(day);
+		await runDay();
 		getStats();
 		printMessages();
-		day+=1;
+		STATE.day+=1;
 	}
 }
 
-
-
-console.log('welcome to trashGame');
 main();
