@@ -3,13 +3,69 @@ const CLI         = require('clui');
 const Spinner     = CLI.Spinner;
 const inquirer  = require('./lib/inquirer');
 const graphics = require('./lib/graphics');
-const information = require('./lib/information');
+const messages = require('./lib/messages');
+const staff = require('./lib/staff');
+const characters = require('./lib/characters');
 const status = new Spinner('running day...');
+const log = console.log;
+
+const readline = require('readline');
+readline.emitKeypressEvents(process.stdin);
+process.stdin.setRawMode(true);
+
+// process.stdin.on('keypress', (str, key) => {
+//   if (key.ctrl && key.name === 'c') {
+//     process.exit();
+//   } 
+
+//   else if(key.name === 's'){
+//   	log('staff');
+//   }
+//   else if(key.name === 'e'){
+//   	log('education');
+//   }
+//   else if(key.name === 'r'){
+//   	log('recycling');
+//   }
+// });
 
 
+const keypress = async () => {
+  process.stdin.setRawMode(true)
+  return new Promise(resolve => process.stdin.on('keypress', (str, key) => {
+	  if (key.ctrl && key.name === 'c') {
+	    process.exit();
+	  } 
+	  else if(key.name === 's'){
+	    log('staff')
+	  	MENU.menu = 'staff';
+	  }
+	  else if(key.name === 'e'){
+	  	log('education');
+	  	MENU.menu = 'education';
+	  }
+	  else if(key.name === 'r'){
+	  	log('recycling');
+	  	MENU.menu = 'recycle';
+	  }
+	  process.stdin.setRawMode(false)
+	  resolve()
+  }))
+}
+
+async function menuSelect() {
+	if(MENU.menu = 'staff'){
+		await staff.runStaff();
+	}
+}
+
+const MENU = {
+	menu: ''
+}
 
 // game state, updated for stats
 const STATE = {
+  username: '',
   buildings: {
     ML: true,
     arch: false,
@@ -17,9 +73,10 @@ const STATE = {
   },
   money: 10000,
   staff: {
-  	cleaners: 1,
+  	custodial: 1,
   	recycling: 0,
   	supervisors: 0,
+  	managers: 0,
   },
   waste: {
   	recycling: 0,
@@ -29,6 +86,7 @@ const STATE = {
   population: {
   	students: 3,
   	faculty: 1,
+  	labManagers: 0,
   },
   day: 0
 }
@@ -47,32 +105,31 @@ function sleep(ms) {
 
 const runDay = async () => {
 	status.start();
-	graphics.drawRoom();
+	graphics.drawRoom(STATE);
 	await sleep(2000);
 	status.stop();
 }
 
 function getStats(){
-	console.log('game state is', STATE);
+	log('game state is', STATE);
 }
 
 function printMessages(){
-	console.log('you have 0 new messages');
-}
-
-const getName = async () => {
-  const username = await inquirer.askName();
-  console.log('hi', username.username, `, let's play!`);
+	log('you have 0 new messages');
 }
 
 
 const main = async () => {
-	await information.onboard();
+	await messages.onboard(STATE);
 	var playing = true;
-	await getName();
 	while (playing) {
 		await runDay();
 		getStats();
+		await keypress();
+		if(MENU.menu !== ''){
+			await menuSelect();
+		}
+		MENU.menu = '';
 		printMessages();
 		STATE.day+=1;
 	}
