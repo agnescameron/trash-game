@@ -4,6 +4,7 @@ const Spinner     = CLI.Spinner;
 const inquirer  = require('./lib/inquirer');
 const graphics = require('./lib/graphics');
 const messages = require('./lib/messages');
+const stats = require('./lib/stats');
 const staff = require('./lib/staff');
 const recycling = require('./lib/recycling')
 const characters = require('./lib/characters');
@@ -12,24 +13,6 @@ const log = console.log;
 
 const readline = require('readline');
 readline.emitKeypressEvents(process.stdin);
-process.stdin.setRawMode(true);
-
-// process.stdin.on('keypress', (str, key) => {
-//   if (key.ctrl && key.name === 'c') {
-//     process.exit();
-//   } 
-
-//   else if(key.name === 's'){
-//   	log('staff');
-//   }
-//   else if(key.name === 'e'){
-//   	log('education');
-//   }
-//   else if(key.name === 'r'){
-//   	log('recycling');
-//   }
-// });
-
 
 const keypress = async () => {
   process.stdin.setRawMode(true)
@@ -49,8 +32,8 @@ const keypress = async () => {
 	  	log('recycling');
 	  	MENU.menu = 'recycle';
 	  }
-	  process.stdin.setRawMode(false)
-	  resolve()
+	  process.stdin.setRawMode(false);
+	  resolve();
   }))
 }
 
@@ -95,6 +78,7 @@ const STATE = {
   	faculty: 1,
   	labManagers: 0,
   },
+  messages: 0,
   day: 0
 }
 
@@ -117,10 +101,6 @@ const runDay = async () => {
 	status.stop();
 }
 
-function getStats(){
-	log('game state is', STATE);
-}
-
 function printMessages(){
 	log('you have 0 new messages');
 }
@@ -130,14 +110,20 @@ const main = async () => {
 	await messages.onboard(STATE);
 	var playing = true;
 	while (playing) {
+		await stats.checkStats(STATE);
+		log('\033c');
+		stats.printStats(STATE);		
 		await runDay();
-		getStats();
 		await keypress();
 		if(MENU.menu !== ''){
 			await menuSelect();
 		}
+		//tidy up
 		MENU.menu = '';
-		printMessages();
+		process.stdin.removeAllListeners('keypress');
+
+		//print messages
+		printMessages();		
 		STATE.day+=1;
 	}
 }
