@@ -5,6 +5,7 @@ const inquirer  = require('./lib/inquirer');
 const graphics = require('./lib/graphics');
 const messages = require('./lib/messages');
 const staff = require('./lib/staff');
+const recycling = require('./lib/recycling')
 const characters = require('./lib/characters');
 const status = new Spinner('running day...');
 const log = console.log;
@@ -54,13 +55,19 @@ const keypress = async () => {
 }
 
 async function menuSelect() {
-	if(MENU.menu = 'staff'){
-		await staff.runStaff();
+	if(MENU.menu === 'staff'){
+		log('selecting staff')
+		await staff.runStaff(STATE, MENU);
 	}
+	else if(MENU.menu === 'recycle'){
+		log('selecting recycling')
+		await recycling.runRecycling(STATE, MENU);
+	}	
 }
 
 const MENU = {
-	menu: ''
+	menu: '',
+	submenu: ''
 }
 
 // game state, updated for stats
