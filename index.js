@@ -1,6 +1,4 @@
 const assert = require('assert'); // N.B: Assert module comes bundled with Node.js.
-const CLI         = require('clui');
-const Spinner     = CLI.Spinner;
 const inquirer  = require('./lib/inquirer');
 const graphics = require('./lib/graphics');
 const messages = require('./lib/messages');
@@ -8,33 +6,35 @@ const stats = require('./lib/stats');
 const staff = require('./lib/staff');
 const recycling = require('./lib/recycling')
 const characters = require('./lib/characters');
-const status = new Spinner('running day...');
+// const status = new Spinner('running day...');
 const log = console.log;
 
-const readline = require('readline');
-readline.emitKeypressEvents(process.stdin);
+// const readline = require('readline');
+// readline.emitKeypressEvents(process.stdin);
 
 const keypress = async () => {
-  process.stdin.setRawMode(true)
-  return new Promise(resolve => process.stdin.on('keypress', (str, key) => {
-	  if (key.ctrl && key.name === 'c') {
-	    process.exit();
-	  } 
-	  else if(key.name === 's'){
-	    log('staff')
-	  	MENU.menu = 'staff';
-	  }
-	  else if(key.name === 'e'){
-	  	log('education');
-	  	MENU.menu = 'education';
-	  }
-	  else if(key.name === 'r'){
-	  	log('recycling');
-	  	MENU.menu = 'recycle';
-	  }
-	  process.stdin.setRawMode(false);
-	  resolve();
-  }))
+	console.log("pressed key");
+
+  // process.stdin.setRawMode(true)
+  // return new Promise(resolve => process.stdin.on('keypress', (str, key) => {
+	 //  if (key.ctrl && key.name === 'c') {
+	 //    process.exit();
+	 //  } 
+	 //  else if(key.name === 's'){
+	 //    log('staff')
+	 //  	MENU.menu = 'staff';
+	 //  }
+	 //  else if(key.name === 'e'){
+	 //  	log('education');
+	 //  	MENU.menu = 'education';
+	 //  }
+	 //  else if(key.name === 'r'){
+	 //  	log('recycling');
+	 //  	MENU.menu = 'recycle';
+	 //  }
+	 //  process.stdin.setRawMode(false);
+	 //  resolve();
+  // }))
 }
 
 async function menuSelect() {
@@ -95,10 +95,8 @@ function sleep(ms) {
 }
 
 const runDay = async () => {
-	status.start();
 	graphics.drawRoom(STATE);
 	await sleep(2000);
-	status.stop();
 }
 
 function printMessages(){
@@ -110,6 +108,9 @@ const main = async () => {
 	await messages.onboard(STATE);
 	var playing = true;
 	while (playing) {
+		console.log('playing')
+		let maindiv = document.getElementById("main");
+		maindiv.innerHTML = "aaaaa";
 		await stats.checkStats(STATE);
 		log('\033c');
 		stats.printStats(STATE);		
@@ -120,7 +121,7 @@ const main = async () => {
 		}
 		//tidy up
 		MENU.menu = '';
-		process.stdin.removeAllListeners('keypress');
+		// process.stdin.removeAllListeners('keypress');
 
 		//print messages
 		printMessages();		
