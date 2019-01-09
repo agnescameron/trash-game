@@ -1,0 +1,57 @@
+
+/*main page elements*/
+
+#map{
+	width: 1000px;
+	height: 600px;
+	background-color: blue;
+	margin-left: auto;
+  	margin-right: auto;
+  	margin-top: 20px;
+}
+
+#topbar{
+	top: 20px;
+	width: 1150px;
+	height: 60px;
+	background-color: yellow;
+	margin-left: auto;
+  	margin-right: auto;
+}
+
+#footer{
+	position: fixed;
+	bottom: 20px;
+	width: 100%;
+}
+
+#menubar{
+	width: 1150px;
+	height: 70px;
+	background-color: pink;
+	margin-left: auto;
+  	margin-right: auto;
+    display: flex;
+    justify-content: center;
+}
+
+
+/*alerts*/
+
+.alert{
+	width: 300px;
+	height: 400px;
+	top: 150px;
+	background-color: green;
+}
+
+
+/*menu items*/
+
+.menubutton{
+	width: 50px;
+	height: 50px;
+	margin: auto;
+	outline: 0px;
+	background-color: none;
+}

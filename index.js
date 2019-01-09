@@ -4,7 +4,8 @@ const graphics = require('./lib/graphics');
 const messages = require('./lib/messages');
 const stats = require('./lib/stats');
 const staff = require('./lib/staff');
-const recycling = require('./lib/recycling')
+const menu = require('./lib/layout/menu');
+const recycling = require('./lib/recycling');
 const characters = require('./lib/characters');
 // const status = new Spinner('running day...');
 const log = console.log;
@@ -103,13 +104,22 @@ function printMessages(){
 	log('you have 0 new messages');
 }
 
+function renderMenu(){
+	let menubar = document.getElementById("menubar")
+	menu.startButtons.forEach(function(element) {
+		let button = document.createElement("button")
+		button.className = "menubutton";
+		button.innerHTML = element;
+		menubar.appendChild(button);
+	});
+}
 
 const main = async () => {
 	await messages.onboard(STATE);
+	renderMenu();
 	var playing = true;
 	while (playing) {
-		console.log('playing')
-		let maindiv = document.getElementById("main");
+		let maindiv = document.getElementById("map");
 		maindiv.innerHTML = "aaaaa";
 		await stats.checkStats(STATE);
 		log('\033c');
